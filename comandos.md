@@ -5,6 +5,12 @@
  source env/bin/activate
 ```
 
+## Sair do virtualenv
+
+```bash
+ deactivate
+```
+
 ## Criar arquivo requirements.txt
 
 ```bash
