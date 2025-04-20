@@ -5,10 +5,6 @@ from django.http import Http404
 from .models import Item
 from .serializers import ItemSerializer
 
-class IndexView(APIView):
-    def get(self, request):
-        return Response("Api Online", status=status.HTTP_200_OK)
-
 class ItemsView(APIView):
     """
     View para listar todos os itens ou criar um novo item.

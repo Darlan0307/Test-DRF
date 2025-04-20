@@ -30,6 +30,13 @@
  python manage.py migrate
 ```
 
+## atualizando model especifico
+
+```bash
+ python manage.py makemigrations name_model
+ python manage.py migrate
+```
+
 ## criar usuário
 
 ```bash
