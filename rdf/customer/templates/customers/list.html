@@ -1,0 +1,63 @@
+<div class="container mt-4">
+  <h2>Clientes</h2>
+  <div class="d-flex justify-content-between mb-3">
+    <input
+      id="searchInput"
+      class="form-control w-50"
+      placeholder="Buscar por nome, CPF/CNPJ ou email"
+    />
+    <a href="/api/clientes/novo/" class="btn btn-primary">Novo Cliente</a>
+  </div>
+  <table class="table table-bordered" id="customerTable">
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>CPF/CNPJ</th>
+        <th>Email</th>
+        <th>Bloqueado</th>
+        <th>Qtd. Vendedores</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody id="customerTableBody">
+      <!-- Dados serão inseridos via JavaScript -->
+    </tbody>
+  </table>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const tableBody = document.getElementById("customerTableBody");
+    const searchInput = document.getElementById("searchInput");
+
+    async function fetchCustomers(query = "") {
+      const response = await fetch(`/api/customers/?search=${query}`);
+      const data = await response.json();
+      tableBody.innerHTML = "";
+      data.results.forEach((customer) => {
+        const row = `<tr>
+        <td>${customer.name}</td>
+        <td>${customer.cpf_cnpj}</td>
+        <td>${customer.email || ""}</td>
+        <td>${customer.is_blocked ? "Sim" : "Não"}</td>
+        <td>${customer.qtd_seller}</td>
+        <td>
+          <a href="/api/clientes/${
+            customer.id
+          }/editar/" class="btn btn-sm btn-warning">Editar</a>
+          <a href="/api/clientes/${
+            customer.id
+          }/excluir/" class="btn btn-sm btn-danger">Excluir</a>
+        </td>
+      </tr>`;
+        tableBody.insertAdjacentHTML("beforeend", row);
+      });
+    }
+
+    searchInput.addEventListener("input", (e) => {
+      fetchCustomers(e.target.value);
+    });
+
+    fetchCustomers();
+  });
+</script>

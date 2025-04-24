@@ -1,0 +1,79 @@
+<div class="container mt-4">
+  <h2>{{ customer.id|yesno:"Editar Cliente,Novo Cliente" }}</h2>
+  <form id="customerForm">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label class="form-label">Nome</label>
+      <input type="text" name="name" class="form-control" required />
+    </div>
+    <div class="mb-3">
+      <label class="form-label">CPF/CNPJ</label>
+      <input type="text" name="cpf_cnpj" class="form-control" required />
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Email</label>
+      <input type="email" name="email" class="form-control" />
+    </div>
+    <div class="mb-3 form-check">
+      <input type="checkbox" name="is_blocked" class="form-check-input" />
+      <label class="form-check-label">Bloqueado</label>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Qtd. de Vendedores</label>
+      <input
+        type="number"
+        name="qtd_seller"
+        class="form-control"
+        min="0"
+        value="0"
+      />
+    </div>
+    <button type="submit" class="btn btn-success">Salvar</button>
+    <a href="/api/clientes/" class="btn btn-secondary">Cancelar</a>
+  </form>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", async function () {
+    const form = document.getElementById("customerForm");
+    const id = window.location.pathname.split("/")[2];
+    const isEdit = window.location.href.includes("editar");
+
+    if (isEdit) {
+      const res = await fetch(`/api/customers/${id}/`);
+      const data = await res.json();
+      form.name.value = data.name;
+      form.cpf_cnpj.value = data.cpf_cnpj;
+      form.email.value = data.email || "";
+      form.is_blocked.checked = data.is_blocked;
+      form.qtd_seller.value = data.qtd_seller;
+    }
+
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const payload = {
+        name: form.name.value,
+        cpf_cnpj: form.cpf_cnpj.value,
+        email: form.email.value,
+        is_blocked: form.is_blocked.checked,
+        qtd_seller: parseInt(form.qtd_seller.value),
+      };
+      const url = isEdit ? `/api/customers/${id}/` : "/api/customers/";
+      const method = isEdit ? "PUT" : "POST";
+      const res = await fetch(url, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]")
+            .value,
+        },
+        body: JSON.stringify(payload),
+      });
+      if (res.ok) {
+        window.location.href = "/api/clientes/";
+      } else {
+        alert("Erro ao salvar cliente");
+      }
+    });
+  });
+</script>
