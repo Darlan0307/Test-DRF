@@ -55,6 +55,8 @@ python manage.py createsuperuser
 
 ```bash
  python manage.py test rdf
+
+ python manage.py test e2e_tests/
 ```
 
 ## apagando banco de dados
