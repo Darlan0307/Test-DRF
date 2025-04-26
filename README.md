@@ -17,8 +17,7 @@
 ### 3. Criando o projeto
 
 ```bash
-  django-admin startproject myproject
-  cd myproject
+  django-admin startproject myproject .
 ```
 
 ### 4. Criando o primeiro App
